@@ -40,7 +40,7 @@ trait TransactionUtils extends descTypeMappings {
   }
 
   def descriptionConverter(description: String): String = {
-    val pattern = "[a-zA-Z ]+[^ \\d\\W]".r
+    val pattern = "[a-zA-Z .]+[^ \\d\\W]".r
     //"Description" is matched first
     val matches = pattern.findAllIn(description).toList
     if (matches.length <= 1) {

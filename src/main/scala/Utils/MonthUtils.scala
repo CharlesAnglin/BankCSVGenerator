@@ -34,20 +34,49 @@ trait MonthUtils extends TransactionUtils {
   }
 
   //assumes only one type of descType exists in each inner stream
-  def averageByMonth(trans: Stream[Stream[Trans]]): Map[DescType,Double] = {
+  def averageByMonth(trans: Stream[Stream[Trans]]): Map[DescType, Double] = {
     descTypes
       .values
       .toStream
-      .map{descType =>
+      .map { descType =>
         val average = trans.flatMap(descTypeBreakdown =>
           descTypeBreakdown.find(_.descType == descType)
         ).map(_.amount)
-        if(average.size == 0){
+        if (average.size == 0) {
           (descType, 0.0)
         } else {
           (descType, average.sum / average.size)
         }
       }.toMap
+  }
+
+  //assumes most recent transactions are at the start
+  def filterSavings(trans: Stream[Trans]): Stream[Trans] = {
+
+    def recursiveHelper(trans: Stream[Trans]): Stream[Trans] = {
+      val index = trans.indexWhere(tran => tran.descType == Savings() | tran.description.toUpperCase.contains("CHEQUE PAID IN"))
+      if (index == -1) {
+        return trans
+      }
+      val (head, tail) = trans.splitAt(index)
+      val filteredTail = if(tail.head.descType == Savings()) {
+        tail.map { trans =>
+          trans.copy(balance = trans.balance - tail.head.amount)
+        }
+      } else {
+        tail
+      }
+      val filteredHead = if (tail.head.descType == Savings()) {
+        head
+      } else {
+        head.map { trans =>
+          trans.copy(balance = trans.balance + tail.head.amount)
+        }
+      }
+      recursiveHelper(filteredHead #::: filteredTail.tail)
+    }
+
+    recursiveHelper(trans.reverse).reverse
   }
 
 
@@ -57,6 +86,8 @@ trait MonthUtils extends TransactionUtils {
     val f = new File("output.csv")
     val writer = CSVWriter.open(f)
 
+    writer.writeRow(List("Date", "Description", "Amount", "Balance", "Type"))
+
     transactions.foreach { trans =>
       writer.writeRow(List(trans.date.toString.take(10), trans.description, trans.amount, trans.balance, trans.descType.toString.dropRight(2)))
     }
@@ -64,12 +95,14 @@ trait MonthUtils extends TransactionUtils {
     writer.close()
   }
 
-  def outputCSVAverage(average: Map[DescType,Double]) = {
+  def outputCSVAverage(average: Map[DescType, Double]) = {
     val f = new File("output.csv")
     val writer = CSVWriter.open(f)
 
+    writer.writeRow(List("Type", "Average"))
+
     average.keys.foreach { descType: DescType =>
-      writer.writeRow(List(descType.toString.dropRight(2), Math.round(average(descType)*100.0)/100.0))
+      writer.writeRow(List(descType.toString.dropRight(2), Math.round(average(descType) * 100.0) / 100.0))
     }
 
     writer.close()

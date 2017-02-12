@@ -17,8 +17,10 @@ object CSVDemo extends App with MonthUtils {
 //    outputCSV(DescriptionTypeSet(trans.right.get))
 //  }
 
-  val averageByMonth: Map[DescType,Double] = averageByMonth(monthSplit(trans).values.map(descTypeBreakdown).toStream)
+//  val averageByMonth: Map[DescType,Double] = averageByMonth(monthSplit(trans).values.map(descTypeBreakdown).toStream)
+//
+//  outputCSVAverage(averageByMonth)
 
-  outputCSVAverage(averageByMonth)
+  outputCSV(filterSavings(trans))
 
 }
