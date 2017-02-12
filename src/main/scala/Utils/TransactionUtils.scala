@@ -1,13 +1,10 @@
 package bank
 
 import java.nio.charset.CodingErrorAction
-
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-
 import scala.io.{Codec, Source}
 import scala.util.Try
-
 
 trait TransactionUtils extends descTypeMappings {
 
@@ -122,6 +119,5 @@ trait TransactionUtils extends descTypeMappings {
       }
     }
   }
-
 
 }

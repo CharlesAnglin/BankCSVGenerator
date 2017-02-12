@@ -1,6 +1,5 @@
 package bank
 
-
 import org.joda.time.DateTime
 import org.scalatest._
 

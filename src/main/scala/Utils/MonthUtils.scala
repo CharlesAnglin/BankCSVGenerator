@@ -1,7 +1,6 @@
 package bank
 
 import java.io.File
-
 import com.github.tototoshi.csv.CSVWriter
 import org.joda.time.DateTime
 

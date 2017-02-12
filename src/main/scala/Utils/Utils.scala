@@ -1,7 +1,5 @@
 package bank
 
-import org.joda.time.DateTime
-
 trait Utils extends MonthUtils {
 
   //untested
