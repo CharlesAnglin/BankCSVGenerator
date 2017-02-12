@@ -80,5 +80,23 @@ class MonthUtilsSpec extends FlatSpec with MustMatchers with MonthUtils {
     result.map(_.balance) mustBe Stream(-6.00, -3.00, 0.00, 3.00, 6.00, 9.00)
   }
 
+  "balancePerMonth" must
+  "return only a date balance pair for each month the day before salary is paied in" in {
+    val result = balancePerMonth(trans)
+
+    result mustBe Stream(
+      (new DateTime("2016-03-03"), 0.0),
+      (new DateTime("2016-02-03"), 0.0),
+      (new DateTime("2016-01-29"), 0.0)
+    )
+  }
+
+  "createInput" must
+    "return a converted stream of transactions in the correct order" in {
+    val result = createInput(Stream("TestStatement.txt", "TestStatement2.txt"))
+
+    result.head.date mustBe new DateTime("2017-02-09")
+    result.last.date mustBe new DateTime("2016-12-22")
+  }
 
 }

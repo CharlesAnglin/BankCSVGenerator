@@ -59,7 +59,7 @@ trait MonthUtils extends TransactionUtils {
         return trans
       }
       val (head, tail) = trans.splitAt(index)
-      val filteredTail = if(tail.head.descType == Savings()) {
+      val filteredTail = if (tail.head.descType == Savings()) {
         tail.map { trans =>
           trans.copy(balance = trans.balance - tail.head.amount)
         }
@@ -79,8 +79,41 @@ trait MonthUtils extends TransactionUtils {
     recursiveHelper(trans.reverse).reverse
   }
 
+  //assumes most recent transactions are at the start
+  def balancePerMonth(trans: Stream[Trans]): Stream[(DateTime, Double)] = {
+    trans
+      .reverse
+      .sliding(2, 1)
+      .toStream
+      .flatMap { tup =>
+        if (tup.last.descType == Salary()) {
+          Some(tup.head.date, tup.head.balance)
+        } else {
+          None
+        }
+      }
+      .reverse
+  }
+
 
   //untested
+
+  //assumes first file is the most recent
+  def createInput(inputFiles: Stream[String]): Stream[Trans] = {
+    val converted = inputFiles.map { file =>
+      TransactionConverter(textConverter(file))
+    }.flatMap { either =>
+      if (either.isLeft) {
+        println(Console.RED + "TRANSACTION CONVERTER FAILED ON: \n" + either.left.get + Console.RESET)
+        //passed back to keep types consistent
+        Stream(Trans(new DateTime("2017"), "FAILURE", 0.00, 0.00, Unmatched()))
+      } else {
+        either.right.get
+      }
+    }
+
+    filterSavings(DescriptionTypeSet(converted))
+  }
 
   def outputCSV(transactions: Stream[Trans]) = {
     val f = new File("output.csv")
@@ -103,6 +136,25 @@ trait MonthUtils extends TransactionUtils {
 
     average.keys.foreach { descType: DescType =>
       writer.writeRow(List(descType.toString.dropRight(2), Math.round(average(descType) * 100.0) / 100.0))
+    }
+
+    writer.writeRow(List("Average sum", average.values.sum))
+
+    writer.close()
+  }
+
+  def outputCSVPerMonth(point: Stream[(DateTime, Double)], date: Boolean = true) = {
+    val f = new File("output.csv")
+    val writer = CSVWriter.open(f)
+
+    writer.writeRow(List("Date", "Balance"))
+
+    point.foreach { point =>
+      writer.writeRow(List(if (date) {
+        point._1
+      } else {
+        point._1.getMillis / 1000
+      }, point._2))
     }
 
     writer.close()

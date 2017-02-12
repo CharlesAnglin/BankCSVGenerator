@@ -119,4 +119,5 @@ class TransactionUtilsSpec extends FlatSpec with MustMatchers with TransactionUt
 
     result mustBe Stream(trans.copy(descType = MiscIn()), trans.copy(amount = -1.5, descType = MiscOut()))
   }
+
 }
