@@ -5,7 +5,6 @@ import org.scalatest._
 
 class TransactionUtilsSpec extends FlatSpec with MustMatchers with TransactionUtils {
 
-
   "textConverter" must
     "return a stream of converted transaction documents" in {
     val result = textConverter("TestStatement.txt")
