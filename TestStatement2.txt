@@ -1,0 +1,33 @@
+From:�09/01/2016�to�09/02/2016
+							
+Account:�XXXX XXXX XXXX XXXX
+						
+Date:�09/02/2016
+Description:�CARD PAYMENT TO ASDA STORES 5011,3.23 GBP, RATE 1.00/GBP ON 07-02-2016
+Amount:�-3.23�	
+Balance:�1639.71�
+						
+Date:�09/02/2016
+Description:�CARD PAYMENT TO WILKO RETAIL LIMIT,2.55 GBP, RATE 1.00/GBP ON 07-02-2016
+Amount:�-2.55�	
+Balance:�1642.94�
+						
+Date:�08/02/2016
+Description:�CARD PAYMENT TO ASDA STORES 5011,20.58 GBP, RATE 1.00/GBP ON 06-02-2016
+Amount:�-20.58�	
+Balance:�1645.49�
+
+Date:�04/02/2016
+Description:�1 Direct Debit Payment for Comms at 3,00% Cashback
+Amount:�0.65�
+Balance:�1644.84�
+
+Date:�04/02/2016
+Description:�INTEREST PAID AFTER TAX 0.00 DEDUCTED
+Amount:�23.84�
+Balance:�1621.00�
+
+Date:�22/12/2016
+Description:�BANK GIRO CREDIT REF QA CONSULTING SERV, blah blah
+Amount:�1491.24�
+Balance:�130.76�

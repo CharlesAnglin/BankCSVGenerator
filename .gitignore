@@ -60,3 +60,4 @@ target/
 *.txt
 *.csv
 !TestStatement.txt
+!TestStatement2.txt

@@ -19,17 +19,17 @@ object CSVDemo extends App with Utils {
 
 
   //create and send chart to plotly account
-  implicit val server = new writer.Server {
-    val credentials = writer.Credentials("brunch", "hKIhRk47FFSIOURwQxnu")
-    val url = "https://api.plot.ly/v2/"
-  }
-
-  val xs = (0.0 to 2.0 by 0.1)
-  val ys = xs.map { x => x*x }
-
-  val plot = Plot().withScatter(xs, ys)
-
-  draw(plot, "my-first-plot")
+//  implicit val server = new writer.Server {
+//    val credentials = writer.Credentials("brunch", "hKIhRk47FFSIOURwQxnu")
+//    val url = "https://api.plot.ly/v2/"
+//  }
+//
+//  val xs = (0.0 to 2.0 by 0.1)
+//  val ys = xs.map { x => x*x }
+//
+//  val plot = Plot().withScatter(xs, ys)
+//
+//  draw(plot, "my-first-plot")
 
 
 }
