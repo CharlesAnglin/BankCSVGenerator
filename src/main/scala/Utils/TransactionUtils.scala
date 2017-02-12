@@ -45,7 +45,6 @@ trait TransactionUtils extends descTypeMappings {
     } else {
       matches(1)
     }
-    //    pattern.findFirstIn(description.replace("Description:", "")).getOrElse("no description found")
   }
 
   def descriptionPull(file: String): Stream[String] = {
