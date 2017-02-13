@@ -142,14 +142,14 @@ trait MonthUtils extends TransactionUtils {
     writer.close()
   }
 
-  def outputCSVPerMonth(point: Stream[(DateTime, Double)], date: Boolean = true) = {
+  def outputCSVPerMonth(point: Stream[(DateTime, Double)], date: Boolean = false) = {
     val f = new File("output.csv")
     val writer = CSVWriter.open(f)
 
     writer.writeRow(List("Date", "Balance"))
 
     point.foreach { point =>
-      writer.writeRow(List(if (date) {
+      writer.writeRow(List(if (!date) {
         point._1
       } else {
         point._1.getMillis / 1000

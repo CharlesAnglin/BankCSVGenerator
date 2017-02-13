@@ -1,19 +1,16 @@
 package bank
 
-import co.theasi.plotly
-import co.theasi.plotly._
-import co.theasi.plotly.writer.Api
-
-import util.Random
-
 object CSVDemo extends App with Utils {
 
   //most recent files first
-  val files = Stream("Statements09012896268044.txt", "LloydsStatement21.txt")
+//  val files = Stream("NewSantanderStatements09012896268044.txt", "LloydsStatement21.txt")
+  val files = Stream("NewSantanderStatements09012896268044.txt")
 
   completeCSV(files)
 //  perMonthCSV(files)
 //  monthlyAverage(files)
+
+//  descriptionAnalyser(descriptionPull("NewSantanderStatements09012896268044.txt")).map(println)
 
 
 

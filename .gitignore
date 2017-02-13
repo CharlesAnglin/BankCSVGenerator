@@ -61,3 +61,4 @@ target/
 *.csv
 !TestStatement.txt
 !TestStatement2.txt
+/Results/
