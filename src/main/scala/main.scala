@@ -3,14 +3,15 @@ package bank
 object CSVDemo extends App with Utils {
 
   //most recent files first
-//  val files = Stream("NewSantanderStatements09012896268044.txt", "LloydsStatement21.txt")
-  val files = Stream("NewSantanderStatements09012896268044.txt")
+//  val files = Stream("NewSantanderStatements09012896268044.txt")
+//  val files = Stream("NewSantanderStatements09012896268044.txt", "Lloyds.txt")
+  val files = Stream("Lloyds.txt")
 
-  completeCSV(files)
+//  completeCSV(files)
 //  perMonthCSV(files)
-//  monthlyAverage(files)
+  monthlyAverage(files)
 
-//  descriptionAnalyser(descriptionPull("NewSantanderStatements09012896268044.txt")).map(println)
+//  descriptionAnalyser(descriptionPull("Lloyds.txt")).map(println)
 
 
 
