@@ -2,6 +2,8 @@ package bank
 
 class DescType(description: String)
 
+//TODO: change these to objects
+
 case class Shopping() extends DescType("weekly shopping from ASDA, iceland etc, includes lunch bought from Boots, Subway etc")
 
 case class Amazon() extends DescType("any purchases made from Amazon")
