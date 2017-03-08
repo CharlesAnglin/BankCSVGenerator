@@ -13,16 +13,18 @@ trait descTypeMappings {
       Social(),
     Vector("TRAIN", "LONDON MIDLAND", "MIDLAND", "TRAINLINE") ->
       Travel(),
-    Vector("FOR COMMS", "INTEREST", "CHEQUE PAID IN") ->
+    Vector("FOR COMMS", "INTEREST") ->
       MiscIn(),
     Vector("ACCOUNT FEE", "OXFAM", "CASH WITHDRAWAL", "WH SMITH", "EE", "POST OFFICE") ->
       MiscOut(),
     Vector("GPS") ->
       Rent(),
-    Vector("CHARLIE HELP", "FROM ANGLIN" ,"CHARLES", "CLOSED ACCOUNT", "CHARLIE TESCO", "CHARLES REFERENCE INITIAL SUM", "ACCOUNT SAVING", "MR CHARLES DEVLIN ANGLIN REFERENCE", "INITIAL SUM", "REF. SANTANDER") ->
+    Vector("CHARLIE HELP", "FROM ANGLIN", "CHARLES", "CLOSED ACCOUNT", "CHARLIE TESCO", "CHARLES REFERENCE INITIAL SUM", "ACCOUNT SAVING", "MR CHARLES DEVLIN ANGLIN REFERENCE", "INITIAL SUM", "REF. SANTANDER") ->
       Savings(),
     Vector("QA CONSULTING") ->
-      Salary()
+      Salary(),
+    Vector("CHEQUE PAID IN", "FASTER PAYMENTS RECEIPT REF.FSCB") -> //N.B. ALL cheques will be ignored
+      Ignored()
   )
 
 }
