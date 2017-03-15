@@ -24,7 +24,7 @@ class MonthUtilsSpec extends FlatSpec with MustMatchers with MonthUtils {
     tran.copy(date = new DateTime("2016-03-03"), balance = -306.00),
     tran.copy(date = new DateTime("2016-03-02"), amount = -100, descType = Savings(), balance = -303.00),
     tran.copy(date = new DateTime("2016-04-02"), balance = -203.00),
-    tran.copy(date = new DateTime("2016-04-01"), description = "CHEQUE PAID IN", amount = 9.00, descType = MiscIn(), balance = -200.00),
+    tran.copy(date = new DateTime("2016-04-01"), description = "CHEQUE PAID IN", amount = 9.00, descType = Ignored(), balance = -200.00),
     tran.copy(date = new DateTime("2016-03-03"), balance = -209.00),
     tran.copy(date = new DateTime("2016-03-02"), amount = -100, descType = Savings(), balance = -206.00),
     tran.copy(date = new DateTime("2016-03-01"), amount = 200, descType = Savings(), balance = -106.00),
@@ -64,7 +64,7 @@ class MonthUtilsSpec extends FlatSpec with MustMatchers with MonthUtils {
         tran.copy(amount = -9.00)
       )))
 
-    result.size mustBe 10
+    result.size mustBe 9
     result(Social()) mustBe -3.00
     result(Salary()) mustBe -3.00
     result(Shopping()) mustBe -6.00
@@ -75,12 +75,14 @@ class MonthUtilsSpec extends FlatSpec with MustMatchers with MonthUtils {
     "change the balance of each transaction to filter out savings" in {
     val result = filterSavings(trans2)
 
+    println(result)
+
     result.size mustBe 6
     result.map(_.balance) mustBe Stream(-6.00, -3.00, 0.00, 3.00, 6.00, 9.00)
   }
 
   "balancePerMonth" must
-  "return only a date balance pair for each month the day before salary is paied in" in {
+  "return only a date balance pair for each month the day before salary is paid in" in {
     val result = balancePerMonth(trans)
 
     result mustBe Stream(

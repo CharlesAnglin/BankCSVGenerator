@@ -8,6 +8,11 @@ import scala.util.Try
 
 trait TransactionUtils extends descTypeMappings {
 
+  //TODO: functions which begin with CAPTIAL letters. BAD!
+
+  /*
+  These top functions are used to to pull the required data from the file.
+  */
   def textConverter(file: String): Stream[Transaction] = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
     val source = Source.fromFile(file)(decoder).getLines().toList
@@ -47,6 +52,11 @@ trait TransactionUtils extends descTypeMappings {
     }
   }
 
+  /*
+  Used in conjunction with descriptionAnalyser to return descriptions along with their frequencies
+  i.e. `descriptionAnalyser(descriptionPull("Lloyds.txt")).map(println)`
+  Will print out a frequency analysis for a specific file.
+  */
   def descriptionPull(file: String): Stream[String] = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.REPLACE)
     val source = Source.fromFile(file)(decoder).getLines().toList
@@ -71,6 +81,10 @@ trait TransactionUtils extends descTypeMappings {
     filteredDescriptions
   }
 
+  /*
+  TransactionConverter, setType and DescriptionTypeSet are all used to transform the stream of pulled data to correctly
+  formatted and matched transactions.
+  */
   def TransactionConverter(transactions: Stream[Transaction]): Either[Transaction, Stream[Trans]] = {
     val convertedTransactions = transactions.map { trans =>
       Try {

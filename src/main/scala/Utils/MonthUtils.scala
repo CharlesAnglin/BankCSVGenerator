@@ -37,11 +37,13 @@ trait MonthUtils extends TransactionUtils {
     descTypes
       .values
       .toStream
+//      .filter(_ != Ignored())
+        .filter(!List(Savings(), Ignored(), Removed()).contains(_))
       .map { descType =>
         val average = trans.flatMap(descTypeBreakdown =>
           descTypeBreakdown.find(_.descType == descType)
         ).map(_.amount)
-        if (average.size == 0) {
+        if (average.isEmpty) {
           (descType, 0.0)
         } else {
           (descType, average.sum / average.size)
@@ -53,7 +55,7 @@ trait MonthUtils extends TransactionUtils {
   def filterSavings(trans: Stream[Trans]): Stream[Trans] = {
 
     def recursiveHelper(trans: Stream[Trans]): Stream[Trans] = {
-      val index = trans.indexWhere(tran => tran.descType == Savings() | tran.description.toUpperCase.contains("CHEQUE PAID IN"))
+      val index = trans.indexWhere(tran => tran.descType == Savings() | tran.descType == Ignored() | tran.descType == Removed())
       if (index == -1) {
         return trans
       }
@@ -62,10 +64,15 @@ trait MonthUtils extends TransactionUtils {
         tail.map { trans =>
           trans.copy(balance = trans.balance - tail.head.amount)
         }
-      } else {
+      } else if(tail.head.descType == Removed()) {
+        tail
+      }
+      else {
         tail
       }
       val filteredHead = if (tail.head.descType == Savings()) {
+        head
+      } else if(tail.head.descType == Removed()) {
         head
       } else {
         head.map { trans =>
