@@ -23,8 +23,10 @@ trait descTypeMappings {
       Savings(),
     Vector("QA CONSULTING") ->
       Salary(),
-    Vector("CHEQUE PAID IN", "FASTER PAYMENTS RECEIPT REF.FSCB") -> //N.B. ALL cheques will be ignored
-      Ignored()
+    Vector("CHEQUE PAID IN") -> //N.B. ALL cheques will be ignored
+      Ignored(),
+    Vector("FASTER PAYMENTS RECEIPT REF.FSCB") ->
+      Removed()
   )
 
 }

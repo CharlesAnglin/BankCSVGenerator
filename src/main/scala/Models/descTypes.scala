@@ -24,7 +24,9 @@ case class Savings() extends DescType("Money being moved")
 
 case class Salary() extends DescType("Salary")
 
-case class Unmatched() extends DescType("descriptions which could not be matched or has not been attempted - will later be sorted into MiscIn or MisOut")
+case class Unmatched() extends DescType("Descriptions which could not be matched or has not been attempted - will later be sorted into MiscIn or MisOut")
 
-case class Ignored() extends DescType("Transactions to be ignored - such as initial sum contributed when opening account.")
+case class Ignored() extends DescType("Transactions to be ignored - such as large cheques paid in.")
+
+case class Removed() extends DescType("Transactions to be removed and not rebalanced - such as initial sum contributed when opening account.")
 
