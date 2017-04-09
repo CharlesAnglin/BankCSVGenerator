@@ -20,7 +20,7 @@ case class MiscOut() extends DescType("Misc, includes cash withdrawal, phone bil
 
 case class Rent() extends DescType("Rent")
 
-case class Savings() extends DescType("Money being moved")
+case class Savings() extends DescType("Money being moved for savings")
 
 case class Salary() extends DescType("Salary")
 

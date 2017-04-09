@@ -1,3 +1,5 @@
+
+
 //package bank
 //
 //trait Utils extends MonthUtils {
@@ -34,3 +36,49 @@
 //  }
 //
 //}
+
+package Utils
+
+import CsvConverter.Converter
+import TransactionConverter.TransactionConverter
+import bank._
+import org.joda.time.DateTime
+
+trait Utils extends TransactionConverter {
+
+  //Assumes first file is the most recent
+  def createInput(files: Map[String, Converter]): Stream[Trans] = {
+    val initialConversion = files.flatMap { tup =>
+      tup._2.csvConverter(tup._1)
+    }.toStream
+
+    transactionConverter(initialConversion) match {
+      case Right(r) => r
+      case Left(l) => println(Console.RED + "TRANSACTION CONVERTER FAILED ON: \n" + l + Console.RESET);
+        Stream(Trans(new DateTime("2017"), "FAILURE", 0.00, 0.00, Unmatched()))
+    }
+  }
+
+  //assumes most recent transactions are at the start
+  def filterSavings(trans: Stream[Trans]): Stream[Trans] = {
+    val savingsBalance = trans.foldLeft(0.0)((a, b) => if (b.descType == Savings()) {
+      a + b.amount
+    } else a)
+    //add on the money that has gone out to savings
+    val currentBalance = trans.head.balance - savingsBalance
+
+    val filteredTrans = trans.filter(b => !List(Ignored(), Removed(), Savings()).contains(b.descType))
+
+    def helperFunct(start: Stream[Trans], end: Stream[Trans]): Stream[Trans] = {
+      if (end.isEmpty) {
+        start
+      } else {
+        val newElement = end.head.copy(balance = start.last.balance - start.last.amount)
+        helperFunct(start #::: Stream(newElement), end.tail)
+      }
+    }
+
+    helperFunct(Stream(filteredTrans.head.copy(balance = currentBalance)), filteredTrans.tail)
+  }
+
+}

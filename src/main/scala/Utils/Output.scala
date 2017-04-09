@@ -1,28 +1,14 @@
 package Utils
 
-import bank.{DescType, Trans, Unmatched}
 import java.io.File
-import CsvConverter.Converter
-import TransactionConverter.TransactionConverter
+
+import bank.{DescType, Trans}
 import com.github.tototoshi.csv.CSVWriter
 import org.joda.time.DateTime
 
-trait IO extends TransactionConverter {
+trait Output {
 
   //  TODO: Completely untested - test create input to make sure it outputs in the right order?
-
-  //Assumes first file is the most recent
-  def createInput(files: Map[String, Converter]): Stream[Trans] = {
-    val initialConversion = files.flatMap { tup =>
-      tup._2.csvConverter(tup._1)
-    }.toStream
-
-    transactionConverter(initialConversion) match {
-      case Right(r) => r
-      case Left(l) => println(Console.RED + "TRANSACTION CONVERTER FAILED ON: \n" + l + Console.RESET);
-        Stream(Trans(new DateTime("2017"), "FAILURE", 0.00, 0.00, Unmatched()))
-    }
-  }
 
   def outputCompleteTransactionCSV(transactions: Stream[Trans]) = {
     val f = new File("output.csv")

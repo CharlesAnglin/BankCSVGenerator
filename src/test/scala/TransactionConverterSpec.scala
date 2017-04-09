@@ -4,7 +4,7 @@ import bank._
 import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, MustMatchers}
 
-class initialConverterSpec extends FlatSpec with MustMatchers with TransactionConverter {
+class TransactionConverterSpec extends FlatSpec with MustMatchers with TransactionConverter {
 
   "initialConverter" must
     "convert a stream of Transaction classes into a stream of Trans classes" in {
