@@ -55,5 +55,42 @@ class UtilsSpec extends FlatSpec with MustMatchers with Utils {
     )
   }
 
+  "monthSplit" must
+    "split a stream of transactions into chunks starting from the date of your monthly salary" in {
+    val result = monthSplit(trans)
+
+    result.size mustBe 2
+    result.head mustBe(trans(5).date, trans.slice(3, 6))
+    result.last mustBe(trans(8).date, trans.slice(6, 9))
+  }
+
+  "descTypeBreakdown" must
+    "sum the amounts of a given stream of Trans by descType" in {
+    val result = descTypeBreakdown(Stream(
+      tran,
+      tran.copy(amount = -100.00),
+      tran.copy(descType = MiscIn()),
+      tran.copy(amount = -30.00)))
+
+    result.size mustBe 2
+    result.map(_.amount) mustBe Stream(-133.00, -3.00)
+  }
+
+  "averageByMonth" must
+    "average over each descType of a given stream of descTypeBreakdowns" in {
+    val result = averageByMonth(Stream(
+      Stream(tran,
+        tran.copy(descType = Salary())),
+      Stream(tran.copy(descType = Social()),
+        tran.copy(amount = -9.00)
+      )))
+
+    result.size mustBe 9
+    result(Social()) mustBe -3.00
+    result(Salary()) mustBe -3.00
+    result(Shopping()) mustBe -6.00
+    result(MiscIn()) mustBe 0
+  }
+
 
 }

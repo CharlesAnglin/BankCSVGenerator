@@ -1,42 +1,3 @@
-
-
-//package bank
-//
-//trait Utils extends MonthUtils {
-//
-//  //untested
-//
-//  def completeCSV(inputFiles: Stream[String]) = {
-//    val convertedInput = createInput(inputFiles)
-//
-//    outputCSV(convertedInput)
-//  }
-//
-//  def perMonthCSV(inputFiles: Stream[String], unixTime: Boolean = false) = {
-//    //gets input - createInput
-//    //reduces each month into a single data point, the day before the salary is put in - balancePerMonth
-//    //writes to file with with Joda date or unix time - outputCSVPerMonth
-//    val convertedInput = createInput(inputFiles)
-//
-//    outputCSVPerMonth(balancePerMonth(convertedInput), unixTime)
-//  }
-//
-//  //assumes most recent file first
-//  def monthlyAverage(inputFiles: Stream[String]) = {
-//    //gets input - createInput
-//    //splits input into monthly chunks - monthSplit
-//    //for each month reduces the transactions to one average - descTypeBreakdown
-//    //takes the average over all months - averageByMonth
-//    //writes to file - outputCSVAverage
-//    val convertedInput = createInput(inputFiles)
-//
-//    val average = averageByMonth(monthSplit(convertedInput).values.map(descTypeBreakdown).toStream)
-//
-//    outputCSVAverage(average)
-//  }
-//
-//}
-
 package Utils
 
 import CsvConverter.Converter
@@ -81,6 +42,9 @@ trait Utils extends TransactionConverter {
     helperFunct(Stream(filteredTrans.head.copy(balance = currentBalance)), filteredTrans.tail)
   }
 
+  /*
+  * Used specifically for getPerMonthTransactions
+  */
   //assumes most recent transactions are at the start
   def balancePerMonth(trans: Stream[Trans]): Stream[(DateTime, Double)] = {
     trans
@@ -97,6 +61,52 @@ trait Utils extends TransactionConverter {
       .reverse
   }
 
-  
+  /*
+  * Used specifically for getMonthlyAverage
+  */
+  //ignores current month
+  def monthSplit(trans: Stream[Trans]): Map[DateTime, Stream[Trans]] = {
+    val transTail = trans.dropWhile(_.descType != Salary()).tail
+
+    def recursiveHelper(trans: Stream[Trans], accumulator: Map[DateTime, Stream[Trans]] = Map()): Map[DateTime, Stream[Trans]] = {
+      val index = trans.indexWhere(_.descType == Salary())
+      if (index == -1) {
+        accumulator
+      } else {
+        val (month, transSplit) = trans.splitAt(index + 1)
+        recursiveHelper(transSplit, accumulator + (month.last.date -> month))
+      }
+    }
+
+    recursiveHelper(transTail)
+  }
+
+  def descTypeBreakdown(trans: Stream[Trans]): Stream[Trans] = {
+    trans.groupBy(_.descType)
+      .values
+      .toStream
+      .map { descType =>
+        descType.reduceLeft((a: Trans, b: Trans) => Trans(a.date, "", a.amount + b.amount, 0, a.descType))
+      }
+  }
+
+  //assumes only one type of descType exists in each inner stream
+  def averageByMonth(trans: Stream[Stream[Trans]]): Map[DescType, Double] = {
+    descTypes
+      .values
+      .toStream
+      .filter(!List(Savings(), Ignored(), Removed()).contains(_))
+      .map { descType =>
+        val average = trans.flatMap(descTypeBreakdown =>
+          descTypeBreakdown.find(_.descType == descType)
+        ).map(_.amount)
+        if (average.isEmpty) {
+          (descType, 0.0)
+        } else {
+          (descType, average.sum / average.size)
+        }
+      }.toMap
+  }
+
 
 }

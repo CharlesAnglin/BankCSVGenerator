@@ -1,13 +1,17 @@
-package bank
+package Utils
 
 import CsvConverter.SantanderConverter
 
-object CSVDemo extends App {
+object CSVDemo extends App with Functionality {
 
   val file = Map(
-    "a" -> SantanderConverter,
-    "b" -> SantanderConverter
+    "17-03-15Statements09012896268044.txt" -> SantanderConverter,
+    "Lloyds.txt" -> SantanderConverter
   )
+
+
+
+
 
 
 
