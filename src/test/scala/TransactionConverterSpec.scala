@@ -4,17 +4,17 @@ import bank._
 import org.joda.time.DateTime
 import org.scalatest.{FlatSpec, MustMatchers}
 
-class TransactionConverterSpec extends FlatSpec with MustMatchers with TransactionConverter {
+class initialConverterSpec extends FlatSpec with MustMatchers with TransactionConverter {
 
-  "TransactionConverter" must
+  "initialConverter" must
     "convert a stream of Transaction classes into a stream of Trans classes" in {
-    val result = TransactionConverter(csvConverter("TestStatement.txt"))
+    val result = initialConverter(csvConverter("TestStatement.txt"))
     result.isRight mustBe true
     result.right.get.length mustBe 6
     result.right.get.head mustBe Trans(new DateTime("2017-02-09"), "CARD PAYMENT TO ASDA STORES", -3.23, 1639.71, Unmatched())
   }
   it must "return the first Transaction it fails to convert" in {
-    val result = TransactionConverter(csvConverter("TestStatement.txt") #::: Stream(Transaction("Date:�09/02/2017", "Description:�CARD PAYMENT TO ASDA STORES 5011,3.23 GBP, RATE 1.00/GBP ON 07-02-2017", "Amount:�-3.23�", "Balance:�1639.71�")))
+    val result = initialConverter(csvConverter("TestStatement.txt") #::: Stream(Transaction("Date:�09/02/2017", "Description:�CARD PAYMENT TO ASDA STORES 5011,3.23 GBP, RATE 1.00/GBP ON 07-02-2017", "Amount:�-3.23�", "Balance:�1639.71�")))
     result.isLeft mustBe true
     result.left.get mustBe Transaction("Date:�09/02/2017", "Description:�CARD PAYMENT TO ASDA STORES 5011,3.23 GBP, RATE 1.00/GBP ON 07-02-2017", "Amount:�-3.23�", "Balance:�1639.71�")
   }
@@ -40,7 +40,7 @@ class TransactionConverterSpec extends FlatSpec with MustMatchers with Transacti
 
   "DescriptionTypeSet" must
     "set a type for each transaction in a given stream of transactions" in {
-    val transactionStream = TransactionConverter(csvConverter("TestStatement.txt")).right.get
+    val transactionStream = initialConverter(csvConverter("TestStatement.txt")).right.get
 
     val result = DescriptionTypeSet(transactionStream)
 

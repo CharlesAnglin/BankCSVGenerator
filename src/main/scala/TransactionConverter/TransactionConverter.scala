@@ -16,8 +16,16 @@ trait TransactionConverter extends descTypeMappings {
   /*
   * Returns either a converted stream or the first transaction which could not be converted.
   */
-  def TransactionConverter(transactions: Stream[Transaction]): Either[Transaction, Stream[Trans]] = {
-    //TODO: Try should return an option? So why wrap it in a either too?
+  //TODO: untested funct
+  def transactionConverter(transactions: Stream[Transaction]): Either[Transaction, Stream[Trans]] = {
+    val initialConversion = initialConverter(transactions)
+    initialConversion.fold(
+      l => Left(l),
+      r => Right(DescriptionTypeSet(r))
+    )
+  }
+
+  def initialConverter(transactions: Stream[Transaction]): Either[Transaction, Stream[Trans]] = {
     val convertedTransactions = transactions.map { trans =>
       Try {
         Right(
