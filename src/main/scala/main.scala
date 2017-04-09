@@ -4,7 +4,7 @@ object CSVDemo extends App with Utils {
 
   //most recent files first
 //  val files = Stream("NewSantanderStatements09012896268044.txt")
-  val files = Stream("NewSantanderStatements09012896268044.txt", "Lloyds.txt")
+  val files = Stream("17-03-15Statements09012896268044.txt", "Lloyds.txt")
 //  val files = Stream("Lloyds.txt")
 
 //  completeCSV(files)
