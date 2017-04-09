@@ -81,4 +81,22 @@ trait Utils extends TransactionConverter {
     helperFunct(Stream(filteredTrans.head.copy(balance = currentBalance)), filteredTrans.tail)
   }
 
+  //assumes most recent transactions are at the start
+  def balancePerMonth(trans: Stream[Trans]): Stream[(DateTime, Double)] = {
+    trans
+      .reverse
+      .sliding(2, 1)
+      .toStream
+      .flatMap { tup =>
+        if (tup.last.descType == Salary()) {
+          Some(tup.head.date, tup.head.balance)
+        } else {
+          None
+        }
+      }
+      .reverse
+  }
+
+  
+
 }
